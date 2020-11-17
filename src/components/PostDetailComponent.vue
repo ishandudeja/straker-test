@@ -1,65 +1,66 @@
 <template>
-  <CRow>
-    <CCol>
-      <CCard>
-        <CCardHeader>
-          User id:  {{ $route.params.id }}
-        </CCardHeader>
-        <CCardBody>
-          <CDataTable
-            striped
-            small
-            fixed
-            :items="visibleData"
-            :fields="fields"
-          />
+ 
+      <div class="d-flex justify-content-center">
+      <CSpinner class="mt-5" v-show="!postsData"
+      style="width:4rem;height:4rem;"
+      color="danger"
+      grow
+    />
+
+    
+      <CCard v-if="postsData">
+        <CCardHeader class="h4 text-capitalize"> {{postsData.title}} </CCardHeader>
+        <CCardBody class="h5 text-capitalize">
+         {{postsData.body}}
+        
         </CCardBody>
         <CCardFooter>
           <CButton color="primary" @click="goBack">Back</CButton>
         </CCardFooter>
       </CCard>
-    </CCol>
-  </CRow>
+      </div>
+   
 </template>
 
 <script>
-import postsData from './PostsData'
+
 export default {
-  name: 'Post',
+  name: "PostDetail",
   beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.postsOpened = from.fullPath.includes('posts')
-    })
+    next((vm) => {
+      vm.postsOpened = from.fullPath.includes("posts");
+    });
   },
-  data () {
+  data() {
     return {
-      postsOpened: null
-    }
+      postsOpened: null,
+     
+    };
   },
   computed: {
-    fields () {
-      return [
-        { key: 'key',  _style: 'width:150px'},
-        { key: 'value', label: '', _style: 'width:150px;' }
-      ]
+    
+    postsData() {
+    
+      const id = this.$route.params.id;
+     const userid = this.$route.params.userid;
+     const post=this.$store.state.posts.find((post) => { if(post.userId==userid && post.id==id) return true }  );
+      return post;
+    
     },
-    postsData () {
-      const id = this.$route.params.id
-      const post = postsData.find((user, index) => index + 1 == id)
-      const postDetails = post ? Object.entries(post) : [['id', 'Not found']]
-      return postDetails.map(([key, value]) => { return { key, value } })
-    },
-    visibleData () {
-      return this.postsData.filter(param => param.key !== 'username')
-    },
-    username () {
-      return this.postsData.filter(param => param.key === 'username')[0].value
-    }
+  },
+  
+  mounted() {
+     
+       this.$store.dispatch("getPosts");
+   
+    
   },
   methods: {
     goBack() {
-      this.postsOpened ? this.$router.go(-1) : this.$router.push({path: '/posts'})
-    }
-  }
-}
+      this.postsOpened
+        ? this.$router.go(-1)
+        : this.$router.push({ path: "/posts" });
+    },
+  },
+};
 </script>
