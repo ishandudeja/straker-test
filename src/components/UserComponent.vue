@@ -1,13 +1,14 @@
 <template>
   <CCard width="50">
-    <CCardHeader class="inline p-1">
+    <CCardBody>
       <CRow>
-        <CCol md="3" class="p-2">
+        <CCol md="2" class="p-2">
           <CImg
             class="ml-2"
-            src="https://www.pinclipart.com/picdir/big/389-3893753_skip-normand-dummy-human-face-clipart.png"
+            src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
             shape="rounded-circle"
             thumbnail
+            width="75"
           />
         </CCol>
         <CCol class="p-2">
@@ -17,59 +18,33 @@
           <span class="h6"> {{ user.email }} </span>
         </CCol>
       </CRow>
-    </CCardHeader>
-    <CCardBody>
-      <CRow>
-        <CCol>
-          <div class="h6">Street</div>
-          {{ user.address.street }}
-        </CCol>
-        <CCol class="text-right">
-          <div class="h6">Suite</div>
-          {{ user.address.suite }}
-        </CCol>
-      </CRow>
-      <hr />
-      <CRow>
-        <CCol>
-          <div class="h6">City</div>
-          {{ user.address.city }}
-        </CCol>
-        <CCol class="text-right">
-          <div class="h6">Zipcode</div>
-          {{ user.address.zipcode }}
-        </CCol>
-      </CRow>
-      <!-- {{user.address}} -->
     </CCardBody>
-    <CCardFooter>
-      <a v-bind:href="getLocationUrl(user.address.geo)" target="_blank">
-        location</a
-      >
+    <CCardFooter class="text-right">
+      <router-link class="m-1" :to="{ path: '/user/' + user.id }" replace>
+        <CIcon
+          :content="$options.icons.cilUser"
+          width="25"
+          style="stroke-width: 1; stroke: rgb(125, 125, 125)"
+        />
+      </router-link>
+      <router-link class="m-1" :to="{ path: '/posts/' + user.id }" replace>
+        <CIcon
+          :content="$options.icons.cilFeaturedPlaylist"
+          width="25"
+          style="stroke-width: 1; stroke: rgb(125, 125, 125)"
+        />
+      </router-link>
     </CCardFooter>
   </CCard>
 </template>
 
 <script>
+import { cilPencil, cilUser, cilFeaturedPlaylist } from "@coreui/icons";
 export default {
   name: "UserComponent",
   props: ["user"],
-  // data() {
-  //     return {
-  //         selectedItem: null
-  //     }
-  // },
-  methods: {
-    getLocationUrl(geo) {
-      return (
-        "https://www.google.com/maps/search/?api=1&query=" +
-        geo["lat"] +
-        "," +
-        geo["lng"]
-      );
-    },
-  },
-};
+  icons: { cilPencil, cilUser, cilFeaturedPlaylist },
+  };
 </script>
 
 <style scoped>
