@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const HelloWorld = () => import('@/components/HelloWorld')
+
 const MainComponent = () => import('@/components/MainComponent')
 const PostComponent = () => import('@/components/PostComponent')
 const PostDetailComponent = () => import('@/components/PostDetailComponent')
+const UserDetailComponent=()=>import ('@/components/UserDetailComponent')
 Vue.use(Router)
 export default new Router({
     mode: 'hash', // https://router.vuejs.org/api/#mode
@@ -15,37 +16,42 @@ export default new Router({
 function configRoutes() {
     return [{
         path: '/',
-        // redirect: '/dashboard',
         name: 'Home',
         component: MainComponent,
         children: [
-                       {
-                path: 'posts/:id',
+            {
+                path: 'posts/:userid',
                 meta: {
-                  label: 'Posts'
+                    label: 'Posts'
                 },
                 component: {
-                  render(c) {
-                    return c('router-view')
-                  }
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
                 children: [
-                  {
-                    path: '',
-                    name: 'Posts',
-                    component: PostComponent
-                  },
-                  {
-                    path: ':id',
-                    meta: {
-                      label: 'Post Details'
+                    {
+                        path: '',
+                        name: 'Posts',
+                        component: PostComponent
                     },
-                    name: 'Post',
-                    component: PostDetailComponent
-                  }
+                    {
+                        path: ':id',
+                        meta: {
+                            label: 'Post Details'
+                        },
+                        name: 'Post',
+                        component: PostDetailComponent
+                    }
                 ]
-              },
+            },
+            {
+                path:'user/:id',
+                name:'user',
+                component: UserDetailComponent
+            }
         ]
-        }
+    }
+    
     ]
 }
