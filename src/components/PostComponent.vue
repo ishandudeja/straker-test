@@ -2,12 +2,13 @@
   <CRow>
     <CCol>
       <CCard>
-        <CCardHeader> Users </CCardHeader>
+        <CCardHeader> Posts </CCardHeader>
         <CCardBody>
           <CDataTable
+            class="text-capitalize"
             hover
             striped
-            :items="items"
+            :items="post"
             :fields="fields"
             :items-per-page="10"
             clickable-rows
@@ -16,13 +17,6 @@
             :pagination="{ doubleArrows: false, align: 'center' }"
             @page-change="pageChange"
           >
-            <!-- <template #status="data">
-              <td>
-                <CBadge :color="getBadge(data.item.status)">
-                  {{data.item.status}}
-                </CBadge>
-              </td>
-            </template> -->
           </CDataTable>
         </CCardBody>
       </CCard>
@@ -31,20 +25,27 @@
 </template>
 
 <script>
-import postsData from "./PostsData";
+import Vue from "vue";
 export default {
   name: "Posts",
   data() {
     return {
-      items: postsData.filter((p) => p.userId == this.$route.params.id),
-      fields: [
-        { key: "userId" },
-        { key: "id" },
-        { key: "title" },
-        { key: "body" },
-      ],
+      fields: [{ key: "title" }],
       activePage: 1,
+      loading: true,
+      errored: false,
     };
+  },
+    computed: {
+    post() {
+      return this.$store.state.posts.filter(
+        (p) => p.userId == this.$route.params.userid
+      );
+    },
+  },
+
+  mounted() {
+    this.$store.dispatch("getPosts");
   },
   watch: {
     $route: {
@@ -57,18 +58,8 @@ export default {
     },
   },
   methods: {
-    // getBadge (status) {
-    //   switch (status) {
-    //     case 'Active': return 'success'
-    //     case 'Inactive': return 'secondary'
-    //     case 'Pending': return 'warning'
-    //     case 'Banned': return 'danger'
-    //     default: 'primary'
-    //   }
-    //},
     rowClicked(item, index) {
-      console.log(item.userId);
-      this.$router.push({ path: `${item.userId}/${index + 1}` });
+      this.$router.push({ path: `${item.userId}/${item.id}` });
     },
     pageChange(val) {
       this.$router.push({ query: { page: val } });
